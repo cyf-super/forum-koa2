@@ -6,6 +6,10 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const path = require('path')
+const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
+
+const { REDIS_CONF } = require('./conf/db')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -31,6 +35,20 @@ app.use(require('koa-static')(path.join(__dirname, '/public')))
 
 app.use(views(path.join(__dirname, '/views'), {
   extension: 'ejs'
+}))
+
+app.keys = ['@CAIyf_123456']
+app.use(session({
+  key: 'weibo.sid', // cookie name,默认是 'koa.sid'
+  prefix: 'weibo:sess:', // redis key的前缀，默认：koa:sess:
+  cookie: {
+    path: '/',
+    httpOnly: true, // 客户端无法修改
+    maxAge: 24 * 60 * 60 * 1000
+  },
+  store: redisStore({
+    all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
+  })
 }))
 
 // routes
