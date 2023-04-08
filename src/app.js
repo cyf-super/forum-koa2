@@ -9,9 +9,17 @@ const path = require('path')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const errorRouterView = require('./routes/view/error')
+const { isProd } = require('./utils/env')
 
+let onerrorConf = {}
+if (isProd) {
+  onerrorConf = {
+    redirect: '/error'
+  }
+}
 // error handler
-onerror(app)
+onerror(app, onerrorConf)
 
 // middlewares
 app.use(bodyparser({
@@ -19,23 +27,17 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(path.resolve(__dirname, '/public')))
+app.use(require('koa-static')(path.join(__dirname, '/public')))
 
-app.use(views(path.resolve(__dirname, '/views'), {
+app.use(views(path.join(__dirname, '/views'), {
   extension: 'ejs'
 }))
-
-// logger
-app.use(async (ctx, next) => {
-  const start = new Date()
-  await next()
-  const ms = new Date() - start
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-})
 
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+// 放最底下
+app.use(errorRouterView.routes(), errorRouterView.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

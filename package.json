@@ -4,7 +4,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev nodemon bin/www",
+    "dev": "cross-env NODE_ENV=dev nodemon --inspect=9229 bin/www",
     "prd": "cross-env NODE_ENV=production pm2 start bin/www",
     "lint": "eslint --ext .js ./src",
     "test": "cross-env NODE_ENV=test jest --runInBand --forceExit --colors"
@@ -36,7 +36,8 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-scope": "^7.1.1",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.4",
+    "redis": "^4.6.5"
   },
   "pre-commit": [
     "lint"

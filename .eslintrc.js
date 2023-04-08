@@ -22,6 +22,7 @@ module.exports = {
     semi: [
       'error',
       'never'
-    ]
+    ],
+    'space-before-function-paren': 'off'
   }
 }
