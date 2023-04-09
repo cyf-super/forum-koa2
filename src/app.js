@@ -8,8 +8,10 @@ const logger = require('koa-logger')
 const path = require('path')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
+const jwtKoa = require('koa-jwt')
 
 const { REDIS_CONF } = require('./conf/db')
+const { SECRET } = require('./conf/constants')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -24,6 +26,12 @@ if (isProd) {
 }
 // error handler
 onerror(app, onerrorConf)
+
+app.use(jwtKoa({
+  secret: SECRET
+}).unless({
+  path: [/^\/users\/login/] // 登陆不需要jwt
+}))
 
 // middlewares
 app.use(bodyparser({
