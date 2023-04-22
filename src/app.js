@@ -8,13 +8,14 @@ const logger = require('koa-logger')
 const path = require('path')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
-const jwtKoa = require('koa-jwt')
+// const jwtKoa = require('koa-jwt')
 
 const { REDIS_CONF } = require('./conf/db')
-const { SECRET } = require('./conf/constants')
+// const { SECRET } = require('./conf/constants')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const userViewRouter = require('./routes/view/user')
+const userApiRouter = require('./routes/api/user')
 const errorRouterView = require('./routes/view/error')
 const { isProd } = require('./utils/env')
 
@@ -27,11 +28,11 @@ if (isProd) {
 // error handler
 onerror(app, onerrorConf)
 
-app.use(jwtKoa({
-  secret: SECRET
-}).unless({
-  path: [/^\/users\/login/] // 登陆不需要jwt
-}))
+// app.use(jwtKoa({
+//   secret: SECRET
+// }).unless({
+//   path: [/^\/users\/login/] // 登陆不需要jwt
+// }))
 
 // middlewares
 app.use(bodyparser({
@@ -61,7 +62,8 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
+app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 // 放最底下
 app.use(errorRouterView.routes(), errorRouterView.allowedMethods())
 

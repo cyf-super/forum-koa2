@@ -1,3 +1,7 @@
+/**
+ * @description 常量集合
+ */
+
 module.exports = {
-  SECRET: '@CAIyf_123456'
+  DEFAULT_PICTURE: 'https://dwz.cn/rnTnftZs'
 }
