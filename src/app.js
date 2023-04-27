@@ -11,6 +11,7 @@ const redisStore = require('koa-redis')
 // const jwtKoa = require('koa-jwt')
 
 const { REDIS_CONF } = require('./conf/db')
+const { SESSION_SECRET_KEY } = require('./conf/secretKey')
 // const { SECRET } = require('./conf/constants')
 
 const index = require('./routes/index')
@@ -46,7 +47,7 @@ app.use(views(path.join(__dirname, '/views'), {
   extension: 'ejs'
 }))
 
-app.keys = ['@CAIyf_123456']
+app.keys = [SESSION_SECRET_KEY]
 app.use(session({
   key: 'weibo.sid', // cookie name,默认是 'koa.sid'
   prefix: 'weibo:sess:', // redis key的前缀，默认：koa:sess:
