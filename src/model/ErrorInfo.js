@@ -18,5 +18,13 @@ module.exports = {
   jsonSchemaFileInfo: {
     errno: 10009,
     message: '数据格式校验错误'
+  },
+  loginFailInfo: {
+    code: 10004,
+    message: '登录失败，用户名或密码错误'
+  },
+  noLogin: {
+    errno: 10005,
+    message: '您尚未登录'
   }
 }

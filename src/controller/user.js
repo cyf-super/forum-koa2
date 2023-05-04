@@ -5,7 +5,8 @@
 const {
   registerUserNameNotExistInfo,
   registerUserNameExistInfo,
-  registerFailInfo
+  registerFailInfo,
+  loginFailInfo
 } = require('../model/ErrorInfo')
 const { getUserInfo, createUser } = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
@@ -51,7 +52,29 @@ const register = async function ({ userName, password, gender }) {
   }
 }
 
+/**
+ * 登陆
+ * @param {Object} koa2 ctx
+ * @param {string} userName
+ * @param {string} password
+ * @returns
+ */
+async function login(ctx, userName, password) {
+  const userInfo = await getUserInfo(userName, doCrypto(password))
+  // 登陆失败
+  if (!userInfo) {
+    return new ErrorModel(loginFailInfo)
+  }
+
+  // 登陆成功
+  if (!ctx.session.userInfo) {
+    ctx.session.userInfo = userInfo
+  }
+  return new SuccessModel()
+}
+
 module.exports = {
   isExist,
-  register
+  register,
+  login
 }
