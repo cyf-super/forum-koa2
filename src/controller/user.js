@@ -6,9 +6,11 @@ const {
   registerUserNameNotExistInfo,
   registerUserNameExistInfo,
   registerFailInfo,
-  loginFailInfo
+  loginFailInfo,
+  changeInfoFailInfo,
+  changePasswordFailInfo
 } = require('../model/ErrorInfo')
-const { getUserInfo, createUser } = require('../services/user')
+const { getUserInfo, createUser, updateUser } = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const doCrypto = require('../utils/crypto')
 
@@ -73,8 +75,67 @@ async function login(ctx, userName, password) {
   return new SuccessModel()
 }
 
+/**
+ * 更改用户信息
+ * @param {*} ctx
+ * @param {*} param1
+ */
+async function changeInfo(ctx, { nickName, city, picture }) {
+  const { userName } = ctx.session.userInfo
+  if (!nickName) {
+    nickName = userName
+  }
+
+  const result = await updateUser({
+    newNickName: nickName,
+    newCity: city,
+    newPicture: picture
+  }, {
+    username: userName
+  })
+
+  // 修改成功，更新session中的数据
+  if (result) {
+    Object.assign(ctx.session.userInfo, {
+      nickName,
+      city,
+      picture
+    })
+    return new SuccessModel()
+  }
+
+  return new ErrorModel(changeInfoFailInfo)
+}
+
+/**
+ * 更新密码
+ * @param {*} userName
+ * @param {*} password
+ * @param {*} newPassword
+ */
+async function changePassword(userName, password, newPassword) {
+  const result = await updateUser(
+    { newPassword: doCrypto(newPassword) },
+    { username: userName, password: doCrypto(password) }
+  )
+
+  if (result) {
+    return new SuccessModel()
+  }
+  return new ErrorModel(changePasswordFailInfo)
+}
+
+// 退出登陆 - 删除相关session信息即可
+async function loginOut(ctx) {
+  delete ctx.session.userInfo
+  return new SuccessModel()
+}
+
 module.exports = {
   isExist,
   register,
-  login
+  login,
+  changeInfo,
+  changePassword,
+  loginOut
 }

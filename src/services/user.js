@@ -42,7 +42,47 @@ async function createUser({ username, password, gender = 3, nickname }) {
   return res.dataValues
 }
 
+/**
+ * 更新用户信息
+ * @param {*} param0 修改内容 { newPassword, newNickName, newCity, newPicture }
+ * @param {*} param1 修改的对象 { username, password }
+ */
+async function updateUser(
+  { newPassword, newNickName, newCity, newPicture },
+  { username, password }
+) {
+  // 拼接修改内容
+  const updateData = {}
+  if (newPassword) {
+    updateData.password = newPassword
+  }
+  if (newNickName) {
+    updateData.nickname = newNickName
+  }
+  if (newCity) {
+    updateData.city = newCity
+  }
+  if (newPicture) {
+    updateData.picture = newPicture
+  }
+
+  // 拼接修改条件
+  const whereData = {
+    username
+  }
+  if (password) {
+    whereData.password = password
+  }
+
+  // 执行更新
+  const result = await User.update(updateData, {
+    where: whereData
+  })
+  return result[0] > 0 // 修改的行数
+}
+
 module.exports = {
   getUserInfo,
-  createUser
+  createUser,
+  updateUser
 }

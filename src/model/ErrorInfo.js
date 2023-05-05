@@ -30,5 +30,13 @@ module.exports = {
   uploadFilesizeFailInfo: {
     code: 10007,
     message: '上传文件尺寸过大'
+  },
+  changeInfoFailInfo: {
+    code: 10008,
+    message: '修改基本信息失败'
+  },
+  changePasswordFailInfo: {
+    code: 10006,
+    message: '修改密码失败，请重试'
   }
 }
