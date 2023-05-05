@@ -33,7 +33,6 @@ async function getUserInfo(username, password) {
 }
 
 async function createUser({ username, password, gender = 3, nickname }) {
-  console.log(username, password, gender)
   const res = await User.create({
     username,
     password,

@@ -8,6 +8,8 @@ const logger = require('koa-logger')
 const path = require('path')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
+const koaStatic = require('koa-static')
+
 // const jwtKoa = require('koa-jwt')
 
 const { REDIS_CONF } = require('./conf/db')
@@ -19,6 +21,7 @@ const userViewRouter = require('./routes/view/user')
 const userApiRouter = require('./routes/api/user')
 const errorRouterView = require('./routes/view/error')
 const { isProd } = require('./utils/env')
+const utilsApiRouter = require('./routes/api/utils')
 
 let onerrorConf = {}
 if (isProd) {
@@ -41,7 +44,8 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(path.join(__dirname, '/public')))
+app.use(koaStatic(path.join(__dirname, 'public')))
+app.use(koaStatic(path.join(__dirname, '..', 'uploadFiles')))
 
 app.use(views(path.join(__dirname, '/views'), {
   extension: 'ejs'
@@ -63,6 +67,7 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
+app.use(utilsApiRouter.routes(), utilsApiRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 // 放最底下

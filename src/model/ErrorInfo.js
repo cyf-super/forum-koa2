@@ -26,5 +26,9 @@ module.exports = {
   noLogin: {
     errno: 10005,
     message: '您尚未登录'
+  },
+  uploadFilesizeFailInfo: {
+    code: 10007,
+    message: '上传文件尺寸过大'
   }
 }
