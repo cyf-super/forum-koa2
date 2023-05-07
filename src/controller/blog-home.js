@@ -1,7 +1,7 @@
 /**
  * @description 首页 controller
  */
-
+const xss = require('xss')
 const { createBlog } = require('../services/blog')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
 const { createBlogFailInfo } = require('../model/ErrorInfo')
@@ -12,7 +12,11 @@ const { createBlogFailInfo } = require('../model/ErrorInfo')
 
 async function create({ userId, image, content }) {
   try {
-    const blog = await createBlog({ userId, image, content })
+    const blog = await createBlog({
+      userId,
+      image,
+      content: xss(content)
+    })
     return new SuccessModel(blog)
   } catch (error) {
     console.log(error.message, error.stack)
