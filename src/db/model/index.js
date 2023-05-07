@@ -3,7 +3,21 @@
  */
 
 const User = require('./User')
+const Blog = require('./Blog')
+
+/**
+ * 创建外键
+ *
+ * Blog中有一个userId的字段来记录所属的User的id
+ * 即将与该Blog对应的User关联起来，在查询Blog时会顺带获取User信息
+ *
+ * foreignKey: 'userId' 指定了外键的userId，如果不指定，默认是UserId
+ */
+Blog.belongsTo(User, {
+  foreignKey: 'userId'
+})
 
 module.exports = {
-  User
+  User,
+  Blog
 }

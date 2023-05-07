@@ -16,8 +16,9 @@ const { REDIS_CONF } = require('./conf/db')
 const { SESSION_SECRET_KEY } = require('./conf/secretKey')
 // const { SECRET } = require('./conf/constants')
 
-const index = require('./routes/index')
+const blogViewRouter = require('./routes/view/blog')
 const userViewRouter = require('./routes/view/user')
+const blogHomeApiRouter = require('./routes/api/blog-home')
 const userApiRouter = require('./routes/api/user')
 const errorRouterView = require('./routes/view/error')
 const { isProd } = require('./utils/env')
@@ -66,10 +67,11 @@ app.use(session({
 }))
 
 // routes
-app.use(index.routes(), index.allowedMethods())
+app.use(blogViewRouter.routes(), blogViewRouter.allowedMethods())
 app.use(utilsApiRouter.routes(), utilsApiRouter.allowedMethods())
 app.use(userViewRouter.routes(), userViewRouter.allowedMethods())
 app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
+app.use(blogHomeApiRouter.routes(), blogHomeApiRouter.allowedMethods())
 // 放最底下
 app.use(errorRouterView.routes(), errorRouterView.allowedMethods())
 
