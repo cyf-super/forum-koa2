@@ -3,7 +3,7 @@
  */
 
 const { Blog, User } = require('../db/model/index')
-const { formatUser } = require('./_format')
+const { formatUser, formatBlog } = require('./_format')
 
 /**
  * 创建博客
@@ -43,7 +43,7 @@ async function getBlogListByUser({ userName, pageIndex = 0, pageSize = 10 }) {
     ]
   })
 
-  let blogList = result.rows.map(row => row.dataValues)
+  let blogList = formatBlog(result.rows.map(row => row.dataValues))
 
   blogList = blogList.map(blogItem => {
     const user = blogItem.user.dataValues

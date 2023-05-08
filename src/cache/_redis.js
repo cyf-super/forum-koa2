@@ -5,11 +5,47 @@
 const redis = require('redis')
 const { REDIS_CONF } = require('../conf/db')
 
-const redisCient = redis.createClient(REDIS_CONF.port, REDIS_CONF.host)
+const redisCient = redis.createClient({
+  host: REDIS_CONF.host,
+  port: REDIS_CONF.port
+})
+
+redisCient.on('connect', () => {
+  console.log('Redis client connected')
+})
 
 redisCient.on('error', err => {
   console.log('redis error ', err)
 })
+
+async function start() {
+  console.log('redisCient.connected ', redisCient.connected)
+  if (!redisCient.connected) {
+    await redisCient.connect()
+  }
+  return {
+    get: function (key) {
+      return new Promise((resolve, reject) => {
+        redisCient.get(key, async (err, val) => {
+          console.log('err, val==> ', err, val)
+          if (err) {
+            reject(err)
+          }
+          if (val === null) {
+            resolve(val)
+          }
+
+          try {
+            resolve(JSON.parse(val))
+            await redisCient.disconnect()
+          } catch (e) {
+            resolve(val)
+          }
+        })
+      })
+    }
+  }
+}
 
 /**
  * @param {string} key
@@ -26,27 +62,10 @@ function set(key, val, timeout = 60 * 60) {
 
 /**
  * @param {string} key
- */
-function get(key) {
-  return new Promise((resolve, reject) => {
-    redisCient.get(key, (err, val) => {
-      if (err) {
-        reject(err)
-      }
-      if (val === null) {
-        resolve(val)
-      }
-
-      try {
-        resolve(JSON.parse(val))
-      } catch (e) {
-        resolve(val)
-      }
-    })
-  })
-}
-
+*/
+// const { get } = start()
 module.exports = {
-  get,
-  set
+  start,
+  set,
+  redisCient
 }
