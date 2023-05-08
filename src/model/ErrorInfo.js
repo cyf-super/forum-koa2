@@ -48,5 +48,10 @@ module.exports = {
   addFollowerFailInfo: {
     errno: 10011,
     message: '添加关注失败'
+  },
+  // 取消关注失败
+  deleteFollowerFailInfo: {
+    errno: 10012,
+    message: '取消关注失败'
   }
 }
