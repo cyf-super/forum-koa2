@@ -2,14 +2,14 @@
  * @description 博客广场缓存层（cache）
  */
 
-const { start, set, redisCient } = require('./_redis')
+// const { start, set, redisCient } = require('./_redis')
 const { getBlogListByUser } = require('../services/blog')
 
 // redis key前缀
-const KEY_PREFIX = 'forum:square:'
+// const KEY_PREFIX = 'forum:square:'
 
 async function getSquareCacheList(pageIndex, pageSize) {
-  const key = `${KEY_PREFIX}${pageIndex}_${pageSize}`
+  // const key = `${KEY_PREFIX}${pageIndex}_${pageSize}`
 
   // redisCient.connect().then(() => {
   //   // 设置键值对
