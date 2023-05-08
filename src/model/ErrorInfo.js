@@ -43,5 +43,10 @@ module.exports = {
   createBlogFailInfo: {
     errno: 11001,
     message: '创建微博失败，请重试'
+  },
+  // 添加关注失败
+  addFollowerFailInfo: {
+    errno: 10011,
+    message: '添加关注失败'
   }
 }
