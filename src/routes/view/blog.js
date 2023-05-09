@@ -1,5 +1,5 @@
 /**
- *
+ * 博客
  */
 
 const router = require('koa-router')()
@@ -8,10 +8,45 @@ const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
 const { getFans, getFollower } = require('../../controller/user-relation')
 const { isExist } = require('../../controller/user')
+const { getHomeBlogList } = require('../../controller/blog-home')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
-  await ctx.render('index', {})
+  const userInfo = ctx.session.userInfo
+  const { id: userId } = userInfo
+
+  // 获取第一页数据
+  const result = await getHomeBlogList(userId)
+  const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
+  console.log('result.data ', result.data)
+
+  // 获取粉丝
+  const fansResult = await getFans(userId)
+  const { count: fansCount, userList } = fansResult.data
+
+  // 获取关注人列表
+  const followersResult = await getFollower(userId)
+  const { count: followersCount, followersList } = followersResult.data
+  await ctx.render('index', {
+    userData: {
+      userInfo,
+      fansData: {
+        count: fansCount,
+        list: userList
+      },
+      followersData: {
+        count: followersCount,
+        list: followersList
+      }
+    },
+    blogData: {
+      isEmpty,
+      blogList,
+      pageSize,
+      pageIndex,
+      count
+    }
+  })
 })
 
 // 个人主页

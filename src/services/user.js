@@ -4,6 +4,7 @@
 
 const User = require('../db/model/User')
 const { formatUser } = require('./_format')
+const { addFollower } = require('./user-relation')
 
 /**
  * 获取用户信息
@@ -39,7 +40,11 @@ async function createUser({ username, password, gender = 3, nickname }) {
     gender,
     nickname: nickname || username
   })
-  return res.dataValues
+
+  const data = res.dataValues
+
+  await addFollower(data.id, data.id)
+  return data
 }
 
 /**
