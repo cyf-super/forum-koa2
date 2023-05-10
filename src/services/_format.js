@@ -19,6 +19,7 @@ function _formatDBTime(obj) {
  * @param {Object} obj 微博数据对象
  */
 function _formatContent(obj) {
+  console.log('obj==> ', obj)
   obj.contentFormat = obj.content
 
   // 格式化 @
