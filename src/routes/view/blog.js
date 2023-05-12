@@ -9,6 +9,10 @@ const { getSquareBlogList } = require('../../controller/blog-square')
 const { getFans, getFollower } = require('../../controller/user-relation')
 const { isExist } = require('../../controller/user')
 const { getHomeBlogList } = require('../../controller/blog-home')
+const {
+  getAtMeCount, getAtMeBlogList
+  // markAsRead
+} = require('../../controller/blog-at')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -27,6 +31,11 @@ router.get('/', loginRedirect, async (ctx, next) => {
   // 获取关注人列表
   const followersResult = await getFollower(userId)
   const { count: followersCount, followersList } = followersResult.data
+
+  // 获取@数量
+  const atCountResult = await getAtMeCount(userId)
+  const { count: atCount } = atCountResult.data
+
   await ctx.render('index', {
     userData: {
       userInfo,
@@ -37,7 +46,8 @@ router.get('/', loginRedirect, async (ctx, next) => {
       followersData: {
         count: followersCount,
         list: followersList
-      }
+      },
+      atCount
     },
     blogData: {
       isEmpty,
@@ -128,6 +138,35 @@ router.get('/square', loginRedirect, async (ctx) => {
   const result = await getSquareBlogList(0)
   const { isEmpty, blogList, pageSize, pageIndex, count } = result.data || {}
   await ctx.render('square', {
+    blogData: {
+      isEmpty,
+      blogList,
+      pageSize,
+      pageIndex,
+      count
+    }
+  })
+})
+
+// at 我
+router.get('/at-me', loginRedirect, async (ctx) => {
+  const { id: userId } = ctx.session.userInfo
+
+  // 获取 @ 数量
+  const atCountResult = await getAtMeCount(userId)
+  const { count: atCount } = atCountResult.data
+
+  // 获取第一页列表
+  const result = await getAtMeBlogList(userId)
+  const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
+  console.log('result.data==> ', atCount, isEmpty,
+    blogList,
+    pageSize,
+    pageIndex,
+    count)
+
+  await ctx.render('atMe', {
+    atCount,
     blogData: {
       isEmpty,
       blogList,
