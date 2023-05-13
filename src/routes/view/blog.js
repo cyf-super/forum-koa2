@@ -10,7 +10,7 @@ const { getFans, getFollower } = require('../../controller/user-relation')
 const { isExist } = require('../../controller/user')
 const { getHomeBlogList } = require('../../controller/blog-home')
 const {
-  getAtMeCount, getAtMeBlogList
+  getAtMeCount, getAtMeBlogList, markAsRead
   // markAsRead
 } = require('../../controller/blog-at')
 
@@ -175,6 +175,11 @@ router.get('/at-me', loginRedirect, async (ctx) => {
       count
     }
   })
+
+  // 页面渲染完成，将未读消息标记为已读
+  if (atCount > 0) {
+    await markAsRead(userId)
+  }
 })
 
 module.exports = router

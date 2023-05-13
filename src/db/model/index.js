@@ -32,7 +32,7 @@ Blog.belongsTo(UserRelation, {
   targetKey: 'followerId'
 })
 
-Blog.belongsTo(AtRelation, {
+Blog.hasMany(AtRelation, {
   foreignKey: 'blogId'
 })
 

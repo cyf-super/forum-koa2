@@ -25,6 +25,7 @@ const squareApiRouter = require('./routes/api/blog-square')
 const errorRouterView = require('./routes/view/error')
 const { isProd } = require('./utils/env')
 const utilsApiRouter = require('./routes/api/utils')
+const blogAtApiRouter = require('./routes/api/blog-at')
 
 let onerrorConf = {}
 if (isProd) {
@@ -76,6 +77,7 @@ app.use(userApiRouter.routes(), userApiRouter.allowedMethods())
 app.use(blogHomeApiRouter.routes(), blogHomeApiRouter.allowedMethods())
 app.use(profileApiRouter.routes(), profileApiRouter.allowedMethods())
 app.use(squareApiRouter.routes(), squareApiRouter.allowedMethods())
+app.use(blogAtApiRouter.routes(), blogAtApiRouter.allowedMethods())
 // 放最底下
 app.use(errorRouterView.routes(), errorRouterView.allowedMethods())
 
